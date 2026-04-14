@@ -1,0 +1,32 @@
+#Termekkartya > div {
+  padding: 10px;
+  
+}
+
+/* mobil - 1 */
+@media (max-width: 576px) {
+  #Termekkartya > div {
+    width: 100%;
+  }
+}
+
+/* tablet - 2 */
+@media (min-width: 577px) and (max-width: 768px) {
+  #Termekkartya > div {
+    width: 50%;
+  }
+}
+
+/* kis laptop - 3 */
+@media (min-width: 769px) and (max-width: 992px) {
+  #Termekkartya > div {
+    width: 33.33%;
+  }
+}
+
+/* desktop - 4 */
+@media (min-width: 993px) {
+  #Termekkartya > div {
+    width: 25%;
+  }
+}
