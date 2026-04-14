@@ -9,11 +9,10 @@ async function TermekBetoltes() {
 
     data.products.forEach(product => {
       const col = document.createElement('div');
-      col.classList.add('col-sm-6', 'col-md-4', 'col-lg-3', 'mb-4');
 
       col.innerHTML = `
         <div class="card h-100 shadow-sm">
-          <img src="${product.thumbnail}" class="card-img-top" alt="${product.title}">
+          <img src="${product.thumbnail}" class="card-img-top img-fluid" alt="${product.title}">
           
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">${product.title}</h5>
