@@ -4,7 +4,7 @@ Ez a projekt egy egyszerű webáruház alkalmazás, amely API-ból tölti be a t
 
 ---
 
-## 🔧 Használt technológiák
+## Használt technológiák
 
 - HTML5  
 - CSS3  
@@ -16,7 +16,7 @@ Ez a projekt egy egyszerű webáruház alkalmazás, amely API-ból tölti be a t
 
 ---
 
-## 🌐 API
+## API
 
 Az alkalmazás a következő API-t használja:
     https://dummyjson.com/products
@@ -25,7 +25,7 @@ Fontos: az API válasza objektum, a termékek a `products` tömbben találhatók
 
 ---
 
-## 📁 Projekt struktúra
+## Projekt struktúra
 
 
 CSAPATMUNKA-
@@ -55,7 +55,7 @@ CSAPATMUNKA-
 
 ---
 
-## ⚙️ Funkciók
+## Funkciók
 
 ### 1. Termékek megjelenítése (GET)
 - API hívás segítségével betölti a termékeket  
@@ -108,12 +108,12 @@ CSAPATMUNKA-
 
 ---
 
-## ▶️ Futtatás
+## Futtatás
 
-⚠️ Fontos: a projekt nem fut megfelelően `file://` módban!
+ Fontos: a projekt nem fut megfelelően `file://` módban!
 
 ---
-## 📊 Dokumentáció
+## Dokumentáció
 
 - projekt-napló  
 - AI-napló  
@@ -121,6 +121,6 @@ CSAPATMUNKA-
 
 ---
 
-## 🚀 Állapot
+## Állapot
 
 - A projekt jelenleg fejlesztés alatt áll
