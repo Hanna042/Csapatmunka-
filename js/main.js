@@ -54,30 +54,37 @@ function renderProducts(products) {
                     <p class="card-text text-muted small flex-grow-1">${product.description}</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <strong>${product.price} $</strong>
-                        <button class="btn btn-primary btn-sm" data-product-id="${product.id}">Kosárba</button>
+                        <div>
+                            <button class="btn btn-primary btn-sm me-2" data-product-id="${product.id}" data-action="add">Kosárba</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     `).join("");
 
-    container.addEventListener("click", (event) => {
+    container.addEventListener("click", async (event) => {
         const target = event.target;
         if (!(target instanceof HTMLButtonElement)) {
             return;
         }
 
         const id = Number(target.dataset.productId);
+        const action = target.dataset.action;
         const selected = products.find((item) => item.id === id);
         if (!selected) {
             return;
         }
 
-        addToCart(selected);
-        target.textContent = "Hozzáadva";
-        setTimeout(() => {
-            target.textContent = "Kosárba";
-        }, 800);
+        if (action === "add") {
+            addToCart(selected);
+            const prev = target.textContent;
+            target.textContent = "Hozzáadva";
+            setTimeout(() => {
+                target.textContent = prev;
+            }, 800);
+            return;
+        }
     });
 }
 
@@ -86,7 +93,22 @@ async function init() {
 
     try {
         const products = await getProducts();
-        renderProducts(products);
+
+      
+        const raw = localStorage.getItem('priceOverrides');
+        let overrides = {};
+        try {
+            overrides = raw ? JSON.parse(raw) : {};
+        } catch {}
+
+        const productsWithOverrides = products.map(p => {
+            if (overrides && overrides[p.id] !== undefined) {
+                return { ...p, price: overrides[p.id] };
+            }
+            return p;
+        });
+
+        renderProducts(productsWithOverrides);
     } catch {
         if (alertBox) {
             alertBox.classList.remove("d-none");

@@ -9,3 +9,14 @@ export async function putData(url, data) {
 
   return response.json();
 }
+
+/**
+
+ * @param {number|string} id
+ * @param {Object} updateFields 
+ */
+export async function updateProductOnAPI(id, updateFields) {
+  const url = `https://dummyjson.com/products/${id}`;
+  return putData(url, updateFields);
+}
+
