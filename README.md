@@ -32,10 +32,8 @@ CSAPATMUNKA-
 │   hozzaadas.html
 │   index.html
 │   kosar.html
-│   map.txt
 │   modositas.html
 │   README.md
-│   update-map.bat
 │   
 ├───assets
 ├───css
