@@ -1,5 +1,6 @@
 import { getProducts } from "./get.js";
 import { formatHuf, getUsdToHufRate, usdToHuf } from "./exchange.js";
+import { getLocalProducts } from "./hozzaadas.js";
 
 const cartStorageKey = "kosar";
 
@@ -40,7 +41,7 @@ function addToCart(product) {
     saveCart(cart);
 }
 
-function renderProducts(products, usdHufRate) {
+export function renderProducts(products, usdHufRate) {
     const container = document.getElementById("Termekkartya");
     if (!container) {
         return;
@@ -115,7 +116,7 @@ async function init() {
             return p;
         });
 
-        renderProducts(productsWithOverrides, usdHufRate);
+        renderProducts([...productsWithOverrides, ...getLocalProducts()], usdHufRate);
     } catch {
         if (alertBox) {
             alertBox.classList.remove("d-none");
