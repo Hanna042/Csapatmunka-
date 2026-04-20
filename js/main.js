@@ -1,6 +1,6 @@
 import { getProducts } from "./get.js";
-import { formatHuf, getUsdToHufRate, usdToHuf } from "./exchange.js";
-import { getLocalProducts } from "./hozzaadas.js";
+import { formatHuf, formatUsd, getUsdToHufRate, usdToHuf } from "./exchange.js";
+import { getLocalProducts as getStoredProducts } from "./hozzaadas.js";
 
 const cartStorageKey = "kosar";
 
@@ -41,24 +41,58 @@ function addToCart(product) {
     saveCart(cart);
 }
 
+function mapLocalProducts(products) {
+    return products.map((product, index) => ({
+        id: Number.isFinite(Number(product.id)) ? Number(product.id) : -(index + 1),
+        title: product.title || product.name || "Új termék",
+        price: Number(product.price) || 0,
+        description: product.description || "",
+        thumbnail: product.thumbnail || "https://via.placeholder.com/400x300?text=Új+termék"
+    }));
+}
+
+function renderPriceBlock(priceUsd, usdHufRate) {
+    const numericPrice = Number(priceUsd) || 0;
+    const converted = usdToHuf(numericPrice, usdHufRate);
+
+    if (Number.isFinite(converted)) {
+        return `
+            <strong>${formatHuf(converted)}</strong>
+            <div class="small text-muted">(${formatUsd(numericPrice)})</div>
+        `;
+    }
+
+    return `
+        <strong>${formatUsd(numericPrice)}</strong>
+        <div class="small text-muted">Az árfolyam most nem elérhető.</div>
+    `;
+}
+
 export function renderProducts(products, usdHufRate) {
     const container = document.getElementById("Termekkartya");
     if (!container) {
         return;
     }
 
+    if (!Array.isArray(products) || products.length === 0) {
+        container.innerHTML = `
+            <div class="col-12">
+                <div class="alert alert-info mb-0">Jelenleg nincs megjeleníthető termék.</div>
+            </div>
+        `;
+        container.onclick = null;
+        return;
+    }
+
     container.innerHTML = products.map((product) => `
         <div class="col-12 col-sm-6 col-lg-4">
             <div class="card product-card shadow-sm">
-                <img src="${product.thumbnail}" class="card-img-top" alt="${product.title}">
+                <img src="${product.thumbnail || "https://via.placeholder.com/400x300?text=Termék"}" class="card-img-top" alt="${product.title}">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">${product.title}</h5>
                     <p class="card-text text-muted small flex-grow-1">${product.description}</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
-                        <div>${Number.isFinite(usdHufRate) ? `
-                            <strong>${formatHuf(usdToHuf(product.price, usdHufRate))}</strong>
-                            <div class="small text-muted">(${product.price} USD)</div>
-                        ` : ""}</div>
+                        <div>${renderPriceBlock(product.price, usdHufRate)}</div>
                         <div>
                             <button class="btn btn-primary btn-sm me-2" data-product-id="${product.id}" data-action="add">Kosárba</button>
                         </div>
@@ -68,7 +102,7 @@ export function renderProducts(products, usdHufRate) {
         </div>
     `).join("");
 
-    container.addEventListener("click", async (event) => {
+    container.onclick = (event) => {
         const target = event.target;
         if (!(target instanceof HTMLButtonElement)) {
             return;
@@ -90,11 +124,12 @@ export function renderProducts(products, usdHufRate) {
             }, 800);
             return;
         }
-    });
+    };
 }
 
 async function init() {
     const alertBox = document.getElementById("uzenet");
+    const localProducts = mapLocalProducts(getStoredProducts());
 
     try {
         const [products, usdHufRate] = await Promise.all([
@@ -116,28 +151,19 @@ async function init() {
             return p;
         });
 
-        renderProducts(productsWithOverrides, usdHufRate);
+        renderProducts([...productsWithOverrides, ...localProducts], usdHufRate);
     } catch {
+        if (localProducts.length > 0) {
+            renderProducts(localProducts, null);
+        }
+
         if (alertBox) {
             alertBox.classList.remove("d-none");
-            alertBox.textContent = "Nem sikerült betölteni a termékeket.";
+            alertBox.textContent = localProducts.length > 0
+                ? "Az API termékek betöltése nem sikerült, de a helyi termékek megjelennek."
+                : "Nem sikerült betölteni a termékeket.";
         }
     }
 }
-function getLocalProducts() {
-    try {
-        const raw = localStorage.getItem('products');
-        if (!raw) return [];
-        const arr = JSON.parse(raw);
-        return arr.map((p, i) => ({
-            id: -(i + 1),
-            title: p.name || 'Új termék',
-            price: Number(p.price) || 0,
-            description: p.description || '',
-            thumbnail: "https://via.placeholder.com/400x300?text=Új+termék"
-        }));
-    } catch {
-        return [];
-    }
-}
+
 init();

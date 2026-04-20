@@ -1,14 +1,34 @@
-export async function getUsdToHufRate() {
-    try {
-        const response = await fetch("https://api.exchangeratesapi.io/v1/latest?access_key=a509ae55964969eb605bde70e09d8d81");
-        if (!response.ok) return null;
-
-        const data = await response.json();
-        const rate = Number(data?.rates?.HUF);
-        return Number.isFinite(rate) && rate > 0 ? rate : null;
-    } catch {
-        return null;
+const rateSources = [
+    {
+        url: "https://api.frankfurter.app/latest?from=USD&to=HUF",
+        getRate: (data) => Number(data?.rates?.HUF)
+    },
+    {
+        url: "https://open.er-api.com/v6/latest/USD",
+        getRate: (data) => Number(data?.rates?.HUF)
     }
+];
+
+export async function getUsdToHufRate() {
+    for (const source of rateSources) {
+        try {
+            const response = await fetch(source.url);
+            if (!response.ok) {
+                continue;
+            }
+
+            const data = await response.json();
+            const rate = source.getRate(data);
+
+            if (Number.isFinite(rate) && rate > 0) {
+                return rate;
+            }
+        } catch {
+            continue;
+        }
+    }
+
+    return null;
 }
 
 export function usdToHuf(usdValue, usdHufRate) {
@@ -25,4 +45,13 @@ export function formatHuf(hufValue) {
         currency: "HUF",
         maximumFractionDigits: 0
     }).format(Math.round(hufValue));
+}
+
+export function formatUsd(usdValue) {
+    return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(Number(usdValue) || 0);
 }

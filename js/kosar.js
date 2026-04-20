@@ -1,4 +1,4 @@
-import { formatHuf, getUsdToHufRate, usdToHuf } from "./exchange.js";
+import { formatHuf, formatUsd, getUsdToHufRate, usdToHuf } from "./exchange.js";
 
 // A kosár adatait a böngésző localStorage-ában tároljuk ezen a kulcson
 const cartStorageKey = "kosar";
@@ -32,31 +32,34 @@ function saveCart(cart) {
     localStorage.setItem(cartStorageKey, JSON.stringify(cart));
 }
 
-/**
- * Ár formázása magyar Ft pénznemre
- */
 function formatPrice(value) {
     return value === null ? "" : formatHuf(value);
 }
 
-/**
- * Kosár végösszegének kiszámítása
- * (ár * mennyiség minden termékre összeadva)
- */
-function calcTotal(cart) {
-    if (!Number.isFinite(usdHufRate)) {
-        return null;
+function formatCartAmount(usdValue, quantity = 1) {
+    const numericUsd = (Number(usdValue) || 0) * quantity;
+    const converted = usdToHuf(numericUsd, usdHufRate);
+
+    if (Number.isFinite(converted)) {
+        return {
+            primary: formatPrice(converted),
+            secondary: `(${formatUsd(numericUsd)})`
+        };
     }
 
+    return {
+        primary: formatUsd(numericUsd),
+        secondary: "Az árfolyam most nem elérhető."
+    };
+}
+
+function calcTotal(cart) {
     return cart.reduce((sum, item) => {
         const unitPriceUsd = Number(item.priceUsd ?? item.price) || 0;
-        return sum + usdToHuf(unitPriceUsd, usdHufRate) * item.quantity;
+        return sum + unitPriceUsd * item.quantity;
     }, 0);
 }
 
-/**
- * HTML-ben megjelenített végösszeg frissítése
- */
 function updateTotal(cart) {
     const totalNode = document.getElementById("KosarVegosszeg");
 
@@ -64,7 +67,11 @@ function updateTotal(cart) {
         return;
     }
 
-    totalNode.textContent = formatPrice(calcTotal(cart));
+    const totalUsd = calcTotal(cart);
+    const converted = usdToHuf(totalUsd, usdHufRate);
+    totalNode.textContent = Number.isFinite(converted)
+        ? formatHuf(converted)
+        : formatUsd(totalUsd);
 }
 
 /**
@@ -107,32 +114,40 @@ function renderCart() {
                     </tr>
                 </thead>
                 <tbody>
-                    ${cart.map((item) => `
-                        <tr>
-                            <td>${item.title}</td>
-                            <td>${Number.isFinite(usdHufRate) ? `
-                                ${formatPrice(usdToHuf(item.priceUsd ?? item.price, usdHufRate))}
-                                <div class="small text-muted">(${Number(item.priceUsd ?? item.price)} USD)</div>
-                            ` : ""}</td>
+                    ${cart.map((item) => {
+                        const unitAmount = formatCartAmount(item.priceUsd ?? item.price);
+                        const subtotalAmount = formatCartAmount(item.priceUsd ?? item.price, item.quantity);
 
-                            <!-- Mennyiség növelés/csökkentés gombok -->
-                            <td>
-                                <div class="btn-group btn-group-sm" role="group">
-                                    <button class="btn btn-outline-secondary" data-action="decrease" data-id="${item.id}">-</button>
-                                    <button class="btn btn-light" disabled>${item.quantity}</button>
-                                    <button class="btn btn-outline-secondary" data-action="increase" data-id="${item.id}">+</button>
-                                </div>
-                            </td>
+                        return `
+                            <tr>
+                                <td>${item.title}</td>
+                                <td>
+                                    ${unitAmount.primary}
+                                    <div class="small text-muted">${unitAmount.secondary}</div>
+                                </td>
 
-                            <!-- Részösszeg (ár * mennyiség) -->
-                            <td>${Number.isFinite(usdHufRate) ? formatPrice(usdToHuf(item.priceUsd ?? item.price, usdHufRate) * item.quantity) : ""}</td>
+                                <!-- Mennyiség növelés/csökkentés gombok -->
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <button class="btn btn-outline-secondary" data-action="decrease" data-id="${item.id}">-</button>
+                                        <button class="btn btn-light" disabled>${item.quantity}</button>
+                                        <button class="btn btn-outline-secondary" data-action="increase" data-id="${item.id}">+</button>
+                                    </div>
+                                </td>
 
-                            <!-- Törlés gomb -->
-                            <td>
-                                <button class="btn btn-danger btn-sm" data-action="remove" data-id="${item.id}">Törlés</button>
-                            </td>
-                        </tr>
-                    `).join("")}
+                                <!-- Részösszeg (ár * mennyiség) -->
+                                <td>
+                                    ${subtotalAmount.primary}
+                                    <div class="small text-muted">${subtotalAmount.secondary}</div>
+                                </td>
+
+                                <!-- Törlés gomb -->
+                                <td>
+                                    <button class="btn btn-danger btn-sm" data-action="remove" data-id="${item.id}">Törlés</button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join("")}
                 </tbody>
             </table>
         </div>
