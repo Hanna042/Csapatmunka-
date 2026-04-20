@@ -123,7 +123,7 @@ CSAPATMUNKA-
 
 - projekt-napló  
 - AI-napló  
-- önértékelés  
+- önértékelés 
 
 ---
 
