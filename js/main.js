@@ -1,5 +1,6 @@
 import { getProducts } from "./get.js";
 import { formatHuf, getUsdToHufRate, usdToHuf } from "./exchange.js";
+import { getLocalProducts } from "./hozzaadas.js";
 
 const cartStorageKey = "kosar";
 
@@ -40,7 +41,7 @@ function addToCart(product) {
     saveCart(cart);
 }
 
-function renderProducts(products, usdHufRate) {
+export function renderProducts(products, usdHufRate) {
     const container = document.getElementById("Termekkartya");
     if (!container) {
         return;
@@ -115,17 +116,7 @@ async function init() {
             return p;
         });
 
-        const localProducts = getLocalProducts();
-    // Minden mező biztosan szerepeljen
-    const sanitizedLocalProducts = localProducts.map(p => ({
-        id: p.id,
-        title: p.title || 'Új termék',
-        price: Number(p.price) || 0,
-        description: p.description || '',
-        thumbnail: p.thumbnail || "https://via.placeholder.com/400x300?text=Új+termék"
-    }));
-    const allProducts = [...productsWithOverrides, ...sanitizedLocalProducts];
-    renderProducts(allProducts, usdHufRate);
+        renderProducts(productsWithOverrides, usdHufRate);
     } catch {
         if (alertBox) {
             alertBox.classList.remove("d-none");
