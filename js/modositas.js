@@ -1,5 +1,6 @@
 import { updateProductOnAPI } from "./put.js";
 import { getProducts } from "./get.js";
+import { formatHuf, getUsdToHufRate, usdToHuf } from "./exchange.js";
 
 function getQueryParam(name) {
   const params = new URLSearchParams(window.location.search);
@@ -21,6 +22,7 @@ async function fetchProduct(id) {
 
 async function init() {
   const id = getQueryParam('id');
+  const usdHufRate = await getUsdToHufRate();
 
   const editCard = document.getElementById('edit-card');
   const productListContainer = document.getElementById('product-list');
@@ -39,7 +41,10 @@ async function init() {
               <h5 class="card-title">${p.title}</h5>
               <p class="card-text text-muted small">${p.description}</p>
               <div class="d-flex justify-content-between align-items-center mt-3">
-                <strong>${p.price} $</strong>
+                <div>${Number.isFinite(usdHufRate) ? `
+                  <strong>${formatHuf(usdToHuf(p.price, usdHufRate))}</strong>
+                  <div class="small text-muted">(${p.price} USD)</div>
+                ` : ""}</div>
                 <a class="btn btn-sm btn-outline-primary" href="modositas.html?id=${p.id}">Szerkeszt</a>
               </div>
             </div>
@@ -67,11 +72,29 @@ async function init() {
 
   const titleEl = document.getElementById('prod-title');
   const priceInput = document.getElementById('price-input');
+  const priceHufPreview = document.getElementById('price-huf-preview');
   const okBtn = document.getElementById('ok-btn');
   const cancelBtn = document.getElementById('cancel-btn');
 
   if (titleEl) titleEl.textContent = product.title ?? '';
   if (priceInput) priceInput.value = product.price ?? '';
+  if (priceHufPreview && Number.isFinite(usdHufRate)) {
+    priceHufPreview.textContent = `Jelenlegi átváltott ár: ${formatHuf(usdToHuf(product.price ?? 0, usdHufRate))}`;
+  } else if (priceHufPreview) {
+    priceHufPreview.textContent = '';
+  }
+
+  priceInput?.addEventListener('input', () => {
+    if (!Number.isFinite(usdHufRate)) {
+      if (priceHufPreview) priceHufPreview.textContent = '';
+      return;
+    }
+
+    const priceUsd = Number(priceInput.value) || 0;
+    if (priceHufPreview) {
+      priceHufPreview.textContent = `Átváltott ár: ${formatHuf(usdToHuf(priceUsd, usdHufRate))}`;
+    }
+  });
 
   cancelBtn?.addEventListener('click', (e) => {
     e.preventDefault();

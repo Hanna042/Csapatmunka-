@@ -1,5 +1,8 @@
+import { formatHuf, getUsdToHufRate, usdToHuf } from "./exchange.js";
+
 // A kosár adatait a böngésző localStorage-ában tároljuk ezen a kulcson
 const cartStorageKey = "kosar";
+let usdHufRate = null;
 
 /**
  * Kosár betöltése a localStorage-ból
@@ -33,7 +36,7 @@ function saveCart(cart) {
  * Ár formázása magyar Ft pénznemre
  */
 function formatPrice(value) {
-    return `${value.toLocaleString("hu-HU")} Ft`;
+    return value === null ? "" : formatHuf(value);
 }
 
 /**
@@ -41,7 +44,14 @@ function formatPrice(value) {
  * (ár * mennyiség minden termékre összeadva)
  */
 function calcTotal(cart) {
-    return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    if (!Number.isFinite(usdHufRate)) {
+        return null;
+    }
+
+    return cart.reduce((sum, item) => {
+        const unitPriceUsd = Number(item.priceUsd ?? item.price) || 0;
+        return sum + usdToHuf(unitPriceUsd, usdHufRate) * item.quantity;
+    }, 0);
 }
 
 /**
@@ -100,7 +110,10 @@ function renderCart() {
                     ${cart.map((item) => `
                         <tr>
                             <td>${item.title}</td>
-                            <td>${formatPrice(item.price)}</td>
+                            <td>${Number.isFinite(usdHufRate) ? `
+                                ${formatPrice(usdToHuf(item.priceUsd ?? item.price, usdHufRate))}
+                                <div class="small text-muted">(${Number(item.priceUsd ?? item.price)} USD)</div>
+                            ` : ""}</td>
 
                             <!-- Mennyiség növelés/csökkentés gombok -->
                             <td>
@@ -112,7 +125,7 @@ function renderCart() {
                             </td>
 
                             <!-- Részösszeg (ár * mennyiség) -->
-                            <td>${formatPrice(item.price * item.quantity)}</td>
+                            <td>${Number.isFinite(usdHufRate) ? formatPrice(usdToHuf(item.priceUsd ?? item.price, usdHufRate) * item.quantity) : ""}</td>
 
                             <!-- Törlés gomb -->
                             <td>
@@ -186,4 +199,9 @@ document.addEventListener("click", (event) => {
 /**
  * Első renderelés betöltéskor
  */
-renderCart();
+async function init() {
+    usdHufRate = await getUsdToHufRate();
+    renderCart();
+}
+
+init();

@@ -1,4 +1,5 @@
 import { getProducts } from "./get.js";
+import { formatHuf, getUsdToHufRate, usdToHuf } from "./exchange.js";
 
 const cartStorageKey = "kosar";
 
@@ -30,7 +31,7 @@ function addToCart(product) {
         cart.push({
             id: product.id,
             title: product.title,
-            price: product.price,
+            priceUsd: product.price,
             thumbnail: product.thumbnail,
             quantity: 1
         });
@@ -39,7 +40,7 @@ function addToCart(product) {
     saveCart(cart);
 }
 
-function renderProducts(products) {
+function renderProducts(products, usdHufRate) {
     const container = document.getElementById("Termekkartya");
     if (!container) {
         return;
@@ -53,7 +54,10 @@ function renderProducts(products) {
                     <h5 class="card-title">${product.title}</h5>
                     <p class="card-text text-muted small flex-grow-1">${product.description}</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
-                        <strong>${product.price} $</strong>
+                        <div>${Number.isFinite(usdHufRate) ? `
+                            <strong>${formatHuf(usdToHuf(product.price, usdHufRate))}</strong>
+                            <div class="small text-muted">(${product.price} USD)</div>
+                        ` : ""}</div>
                         <div>
                             <button class="btn btn-primary btn-sm me-2" data-product-id="${product.id}" data-action="add">Kosárba</button>
                         </div>
@@ -92,7 +96,10 @@ async function init() {
     const alertBox = document.getElementById("uzenet");
 
     try {
-        const products = await getProducts();
+        const [products, usdHufRate] = await Promise.all([
+            getProducts(),
+            getUsdToHufRate()
+        ]);
 
       
         const raw = localStorage.getItem('priceOverrides');
@@ -102,13 +109,13 @@ async function init() {
         } catch {}
 
         const productsWithOverrides = products.map(p => {
-            if (overrides && overrides[p.id] !== undefined) {
-                return { ...p, price: overrides[p.id] };
+            if (overrides && overrides[String(p.id)] !== undefined) {
+                return { ...p, price: Number(overrides[String(p.id)]) };
             }
             return p;
         });
 
-        renderProducts(productsWithOverrides);
+        renderProducts(productsWithOverrides, usdHufRate);
     } catch {
         if (alertBox) {
             alertBox.classList.remove("d-none");
