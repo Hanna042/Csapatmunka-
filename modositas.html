@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Termék módosítása</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+          <a class="navbar-brand" href="index.html" id="boltnev">VW áruház</a>
+          <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item"><a class="nav-link" href="index.html">Vissza a főoldalra</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container py-4">
+      <h2 id="page-title">Termék módosítása</h2>
+      <div id="uzenet" class="alert alert-danger d-none" role="alert"></div>
+
+  
+  <div id="product-list" class="row g-3"></div>
+
+      <div class="card mt-3" id="edit-card">
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">Termék neve</label>
+            <p id="prod-title" class="form-control-plaintext"></p>
+          </div>
+
+          <div class="mb-3">
+            <label for="price-input" class="form-label">Ár ($)</label>
+            <input id="price-input" type="number" class="form-control" min="0" step="0.01">
+          </div>
+
+          <div class="d-flex gap-2">
+            <button id="ok-btn" class="btn btn-primary">OK</button>
+            <button id="cancel-btn" class="btn btn-secondary">Mégse</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script type="module" src="js/modositas.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/js/bootstrap.min.js"></script>
+  </body>
+</html>
