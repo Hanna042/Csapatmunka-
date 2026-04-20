@@ -27,11 +27,13 @@ Fontos: az API válasza objektum, a termékek a `products` tömbben találhatók
 
 ## Projekt struktúra
 
-
+```
 CSAPATMUNKA-
+│   hozzaadas.html
 │   index.html
 │   kosar.html
 │   map.txt
+│   modositas.html
 │   README.md
 │   update-map.bat
 │   
@@ -41,15 +43,19 @@ CSAPATMUNKA-
 │       
 ├───dokumentumok
 │       AI Napló.docx
-│       Daly stand-up.docx
+│       Daly_stand-up.docx
 │       
 └───js
         get.js
         kosar.js
         kosar.test.js
         main.js
+        modositas.js
         post.js
         put.js
+        
+
+```
         
 
 
@@ -117,7 +123,7 @@ CSAPATMUNKA-
 
 - projekt-napló  
 - AI-napló  
-- önértékelés  
+- önértékelés 
 
 ---
 
