@@ -9,43 +9,41 @@
 </head>
 <body>
     <header>
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-			<div class="container">
-				<a class="navbar-brand" href="index.html" id="boltnev">VW áruház</a>
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="collapse navbar-collapse" id="navbarNav">
-					<ul class="navbar-nav ms-auto">
-						<li class="nav-item">
-							<a class="nav-link active" href="kosar.html" aria-current="page">Kosár</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-	</header>
-
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+          <a class="navbar-brand" href="index.html" id="boltnev">VW áruház</a>
+          <div class="collapse navbar-collapse">
+          </div>
+        </div>
+      </nav>
+    </header>
     <main class="container py-4">
         <h1 class="h3 mb-4">Termék hozzáadása</h1>
+
         <form id="addProductForm">
             <div class="mb-3">
-                <label for="productName" class="form-label">Termék neve</label>
+                <label class="form-label">Termék neve</label>
                 <input type="text" class="form-control" id="productName" required>
             </div>
+
             <div class="mb-3">
-                <label for="productPrice" class="form-label">Termék ára</label>
+                <label class="form-label">Termék ára</label>
                 <input type="number" class="form-control" id="productPrice" required>
             </div>
+
             <div class="mb-3">
-                <label for="productDescription" class="form-label">Termék leírása</label>
+                <label class="form-label">Termék leírása</label>
                 <textarea class="form-control" id="productDescription" rows="3" required></textarea>
             </div>
+
             <button type="submit" class="btn btn-primary">Hozzáadás</button>
         </form>
     </main>
-</body>
+
+    <!-- FONTOS: ez a jó script -->
+    <script src="js/hozzaadas.js"></script>
     <script src="js/main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/js/bootstrap.min.js"></script>
+</body>
 </html>

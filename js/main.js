@@ -115,7 +115,17 @@ async function init() {
             return p;
         });
 
-        renderProducts(productsWithOverrides, usdHufRate);
+        const localProducts = getLocalProducts();
+    // Minden mező biztosan szerepeljen
+    const sanitizedLocalProducts = localProducts.map(p => ({
+        id: p.id,
+        title: p.title || 'Új termék',
+        price: Number(p.price) || 0,
+        description: p.description || '',
+        thumbnail: p.thumbnail || "https://via.placeholder.com/400x300?text=Új+termék"
+    }));
+    const allProducts = [...productsWithOverrides, ...sanitizedLocalProducts];
+    renderProducts(allProducts, usdHufRate);
     } catch {
         if (alertBox) {
             alertBox.classList.remove("d-none");
@@ -123,5 +133,20 @@ async function init() {
         }
     }
 }
-
+function getLocalProducts() {
+    try {
+        const raw = localStorage.getItem('products');
+        if (!raw) return [];
+        const arr = JSON.parse(raw);
+        return arr.map((p, i) => ({
+            id: -(i + 1),
+            title: p.name || 'Új termék',
+            price: Number(p.price) || 0,
+            description: p.description || '',
+            thumbnail: "https://via.placeholder.com/400x300?text=Új+termék"
+        }));
+    } catch {
+        return [];
+    }
+}
 init();
