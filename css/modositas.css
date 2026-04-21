@@ -1,0 +1,24 @@
+h2{
+    color: white;
+}
+
+label.form-label {
+    color: rgb(141, 141, 141);
+    font-weight: 500;
+}
+
+button.btn-primary {
+    background-color: #c73002;
+    border-color: #c73002;
+}
+
+button.btn-primary:hover {
+    background-color: #942000;
+    border-color: #942000;
+}
+
+body.card #productlist{
+    background-color: rgba(0, 0, 0, 0.541);
+    padding: 20px;
+    border-radius: 8px;
+}

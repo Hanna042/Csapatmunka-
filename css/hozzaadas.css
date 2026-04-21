@@ -1,0 +1,31 @@
+
+h1.hozzaad {
+    color: #ffffff;
+}
+
+label.form-label {
+    color: rgb(141, 141, 141);
+    font-weight: 500;
+}
+
+button.btn-primary {
+    background-color: #c73002;
+    border-color: #c73002;
+}
+
+button.btn-primary:hover {
+    background-color: #942000;
+    border-color: #942000;
+}
+
+form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+body.dark form{
+    background-color: black;
+    padding: 20px;
+    border-radius: 8px;
+}
