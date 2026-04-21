@@ -18,34 +18,31 @@
     </header>
 
     <main class="container py-4">
-      <h2 id="page-title">Termék módosítása</h2>
-      <div id="uzenet" class="alert alert-danger d-none" role="alert"></div>
+  <h2>Termék módosítása</h2>
 
-  
+  <div id="uzenet" class="alert alert-danger d-none"></div>
+
+  <!-- LISTA -->
   <div id="product-list" class="row g-3"></div>
 
-      <div class="card mt-3" id="edit-card">
-        <div class="card-body">
-          <div class="mb-3">
-            <label class="form-label">Termék neve</label>
-            <p id="prod-title" class="form-control-plaintext"></p>
-          </div>
+  <!-- EDIT -->
+  <div id="edit-card" class="card mt-3 d-none">
+    <div class="card-body">
 
-          <div class="mb-3">
-            <label for="price-input" class="form-label">Ár (USD)</label>
-            <input id="price-input" type="number" class="form-control" min="0" step="0.01">
-            <div id="price-huf-preview" class="form-text"></div>
-          </div>
+      <p id="prod-title"></p>
 
-        <div class="d-flex gap-2">
-            <button id="ok-btn" class="btn btn-primary">Mentés</button>
-            <button id="cancel-btn" class="btn btn-secondary">Mégse</button>
-        </div>
+      <input id="price-input" type="number" class="form-control">
+      <div id="price-huf-preview"></div>
+
+      <div class="mt-3">
+        <button id="ok-btn" class="btn btn-primary">Mentés</button>
+        <button id="cancel-btn" class="btn btn-secondary">Mégse</button>
+      </div>
 
     </div>
+  </div>
+</main>
 
-</div>
-
-<script src="js/modositas.js"></script>
+<script type="module" src="js/modositas.js"></script>
 </body>
 </html>
