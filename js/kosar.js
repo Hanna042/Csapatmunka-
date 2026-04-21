@@ -53,7 +53,7 @@ function formatCartAmount(usdValue, quantity = 1) {
     };
 }
 
-function calcTotal(cart) {
+export function calcTotal(cart) {
     return cart.reduce((sum, item) => {
         const unitPriceUsd = Number(item.priceUsd ?? item.price) || 0;
         return sum + unitPriceUsd * item.quantity;
@@ -194,29 +194,37 @@ function mutateCart(productId, action) {
  * Globális kattintásfigyelő
  * A gombok data-action és data-id alapján működnek
  */
-document.addEventListener("click", (event) => {
-    const target = event.target;
+if (typeof document !== "undefined") {
+    document.addEventListener("click", (event) => {
+        const target = event.target;
 
-    if (!(target instanceof HTMLButtonElement)) {
-        return;
-    }
+        if (!(target instanceof HTMLButtonElement)) {
+            return;
+        }
 
-    const action = target.dataset.action;
-    const id = Number(target.dataset.id);
+        const action = target.dataset.action;
+        const id = Number(target.dataset.id);
 
-    if (!action || Number.isNaN(id)) {
-        return;
-    }
+        if (!action || Number.isNaN(id)) {
+            return;
+        }
 
-    mutateCart(id, action);
-});
+        mutateCart(id, action);
+    });
+}
 
 /**
  * Első renderelés betöltéskor
  */
 async function init() {
+    if (typeof document === "undefined") {
+        // Jest tesztkörnyezetben ne fussunk
+        return;
+    }
     usdHufRate = await getUsdToHufRate();
     renderCart();
 }
 
-init();
+if (typeof document !== "undefined") {
+    init();
+}

@@ -166,4 +166,6 @@ async function init() {
     }
 }
 
-init();
+if (typeof document !== "undefined") {
+    init();
+}
