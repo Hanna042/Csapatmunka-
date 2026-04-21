@@ -32,7 +32,6 @@ async function init() {
   const editCard = document.getElementById('edit-card');
   const productListContainer = document.getElementById('product-list');
 
-  // LISTA
   if (!id) {
     if (editCard) editCard.classList.add('d-none');
 
@@ -41,20 +40,21 @@ async function init() {
       const localProducts = getLocalProducts();
 
       const allProducts = [...apiProducts, ...localProducts];
+
       if (!productListContainer) return;
 
-      productListContainer.innerHTML = allProducts.map((p, index) => `
+      productListContainer.innerHTML = allProducts.map((p) => `
         <div class="col-12 col-sm-6 col-lg-4">
           <div class="card shadow-sm">
-            <img src="${p.thumbnail}" class="card-img-top">
+            <img src="${p.thumbnail || 'https://via.placeholder.com/300'}" class="card-img-top">
             <div class="card-body">
-              <h5>${p.title}</h5>
-              <p class="text-muted small">${p.description}</p>
+              <h5>${p.title || p.name}</h5>
+              <p class="text-muted small">${p.description || ''}</p>
               <div class="d-flex justify-content-between">
                 <div>
                   ${Number.isFinite(usdHufRate) ? `
-                    <strong>${formatHuf(usdToHuf(p.price, usdHufRate))}</strong>
-                    <div class="small text-muted">(${p.price} USD)</div>
+                    <strong>${formatHuf(usdToHuf(Number(p.price) || 0, usdHufRate))}</strong>
+                    <div class="small text-muted">(${p.price || 0} USD)</div>
                   ` : ""}
                 </div>
                 <a href="modositas.html?id=${p.id}" class="btn btn-sm btn-outline-primary">
@@ -65,42 +65,60 @@ async function init() {
           </div>
         </div>
       `).join('');
-    } catch {
+
+    } catch (err) {
+      console.error(err);
       showError('Hiba a terméklista betöltésekor.');
     }
 
     return;
   }
 
-  // EDIT
   if (editCard) editCard.classList.remove('d-none');
   if (productListContainer) productListContainer.classList.add('d-none');
 
   let product;
-  try {
-    product = await fetchProduct(id);
-  } catch {
-    showError('Hiba a termék betöltésekor.');
-    return;
+  let isLocal = false;
+
+  const localProducts = getLocalProducts();
+  product = localProducts.find(p => String(p.id) === String(id));
+
+  if (product) {
+    isLocal = true;
+  } else {
+    try {
+      product = await fetchProduct(id);
+    } catch (err) {
+      console.error(err);
+      showError('Hiba a termék betöltésekor.');
+      return;
+    }
   }
 
   const titleEl = document.getElementById('prod-title');
   const priceInput = document.getElementById('price-input');
   const preview = document.getElementById('price-huf-preview');
 
-  titleEl.textContent = product.title;
-  priceInput.value = product.price;
+  titleEl.textContent = product.title || product.name || '';
+  priceInput.value = product.price || 0;
 
   if (Number.isFinite(usdHufRate)) {
-    preview.textContent = formatHuf(usdToHuf(product.price, usdHufRate));
+    preview.textContent = formatHuf(
+      usdToHuf(Number(product.price) || 0, usdHufRate)
+    );
   }
 
   priceInput.addEventListener('input', () => {
     const val = Number(priceInput.value) || 0;
-    preview.textContent = formatHuf(usdToHuf(val, usdHufRate));
+
+    if (Number.isFinite(usdHufRate)) {
+      preview.textContent = formatHuf(usdToHuf(val, usdHufRate));
+    }
   });
 
-  document.getElementById('cancel-btn').onclick = () => location.href = 'index.html';
+  document.getElementById('cancel-btn').onclick = () => {
+    location.href = 'index.html';
+  };
 
   document.getElementById('ok-btn').onclick = async () => {
     const newPrice = Number(priceInput.value);
@@ -110,8 +128,26 @@ async function init() {
       return;
     }
 
-    await updateProductOnAPI(id, { price: newPrice });
-    location.href = 'index.html';
+    try {
+      if (isLocal) {
+        const updated = localProducts.map(p =>
+          String(p.id) === String(id)
+            ? { ...p, price: newPrice }
+            : p
+        );
+
+        localStorage.setItem('products', JSON.stringify(updated));
+
+      } else {
+        await updateProductOnAPI(id, { price: newPrice });
+      }
+
+      location.href = 'index.html';
+
+    } catch (err) {
+      console.error(err);
+      alert('Hiba mentéskor');
+    }
   };
 }
 
