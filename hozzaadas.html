@@ -21,20 +21,11 @@
         <h1 class="h3 mb-4">Termék hozzáadása</h1>
 
         <form id="addProductForm">
-            <div class="mb-3">
-                <label class="form-label">Termék neve</label>
-                <input type="text" class="form-control" id="productName" required>
-            </div>
+            <input type="text" id="productName" class="form-control mb-2" placeholder="Név" required>
+            <input type="number" id="productPrice" class="form-control mb-2" placeholder="Ár" required>
+            <textarea id="productDescription" class="form-control mb-2" placeholder="Leírás"></textarea>
 
-            <div class="mb-3">
-                <label class="form-label">Termék ára</label>
-                <input type="number" class="form-control" id="productPrice" required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Termék leírása</label>
-                <textarea class="form-control" id="productDescription" rows="3" required></textarea>
-            </div>
+            <input type="file" id="productImage" class="form-control mb-2" accept="image/*">
 
             <button type="submit" class="btn btn-primary">Hozzáadás</button>
         </form>
