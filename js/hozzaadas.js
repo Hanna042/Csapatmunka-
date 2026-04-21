@@ -1,11 +1,35 @@
 export function addProduct(product, storage = localStorage) {
     const existing = JSON.parse(storage.getItem("products") || "[]");
+
+    if (!product.id) {
+        product.id = Date.now().toString();
+    }
+
     existing.push(product);
     storage.setItem("products", JSON.stringify(existing));
 }
 
 export function getLocalProducts(storage = localStorage) {
-    return JSON.parse(storage.getItem("products") || "[]");
+    let products = JSON.parse(storage.getItem("products") || "[]");
+
+    let changed = false;
+
+    products = products.map((p, i) => {
+        if (!p.id) {
+            changed = true;
+            return {
+                ...p,
+                id: `local-${i}-${Date.now()}`
+            };
+        }
+        return p;
+    });
+
+    if (changed) {
+        storage.setItem("products", JSON.stringify(products));
+    }
+
+    return products;
 }
 
 function fileToBase64(file) {
@@ -32,19 +56,21 @@ if (typeof document !== "undefined") {
             const imageInput = document.getElementById("productImage");
 
             let thumbnail = null;
+
             if (imageInput && imageInput.files.length > 0) {
                 try {
                     thumbnail = await fileToBase64(imageInput.files[0]);
                 } catch (err) {
-                    console.error("Kép feldolgozási hiba:", err);
+                    console.error("Kép hiba:", err);
                 }
             }
 
             addProduct({
+                id: Date.now().toString(),
                 title,
                 price,
                 description,
-                thumbnail 
+                thumbnail
             });
 
             window.location.href = "index.html";
