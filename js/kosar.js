@@ -123,12 +123,12 @@ function renderCart() {
                                 <td>${item.title}</td>
                                 <td>
                                     ${unitAmount.primary}
-                                    <div class="small text-muted">${unitAmount.secondary}</div>
+                                    <div class="small text-muted kosar">${unitAmount.secondary}</div>
                                 </td>
 
                                 <!-- Mennyiség növelés/csökkentés gombok -->
                                 <td>
-                                    <div class="btn-group btn-group-sm" role="group">
+                                    <div class="btn-group btn-group-sm" role="group kosar">
                                         <button class="btn btn-outline-secondary" data-action="decrease" data-id="${item.id}">-</button>
                                         <button class="btn btn-light" disabled>${item.quantity}</button>
                                         <button class="btn btn-outline-secondary" data-action="increase" data-id="${item.id}">+</button>
@@ -138,7 +138,7 @@ function renderCart() {
                                 <!-- Részösszeg (ár * mennyiség) -->
                                 <td>
                                     ${subtotalAmount.primary}
-                                    <div class="small text-muted">${subtotalAmount.secondary}</div>
+                                    <div class="small text-muted kosar">${subtotalAmount.secondary}</div>
                                 </td>
 
                                 <!-- Törlés gomb -->

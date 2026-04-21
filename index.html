@@ -1,47 +1,56 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="description" content="Mini webáruház terméklista és kosár nézet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <title>Mini webáruház</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="description" content="Mini webáruház terméklista és kosár nézet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <title>Mini webáruház</title>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container">
-                <a class="navbar-brand" href="index.html" id="boltnev">VW áruház </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="hozzaadas.html">Termék hozzáadása</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="modositas.html">Termék módosítása</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="kosar.html">Kosár</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
 
-    <main class="container py-4">
-        <div id="uzenet" class="alert alert-danger d-none" role="alert"></div>
-        <div class="row g-3" id="Termekkartya"></div>
-    </main>
+      <a class="navbar-brand" href="index.html" id="boltnev">VW áruház</a>
 
-    <script type="module" src="js/main.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/js/bootstrap.min.js"></script>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="hozzaadas.html">Termék hozzáadása</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="modositas.html">Termék módosítása</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="kosar.html">Kosár</a>
+          </li>
+        </ul>
+
+        <button id="theme-toggle" class="btn btn-outline-secondary btn-sm ms-3" aria-label="Téma váltás">⚫</button>
+
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main class="container py-4">
+  <div id="uzenet" class="alert alert-danger d-none"></div>
+  <div class="row g-3" id="Termekkartya"></div>
+</main>
+
+<script src="js/theme.js" defer></script>
+<script type="module" src="js/main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/js/bootstrap.min.js"></script>
 </body>
 </html>

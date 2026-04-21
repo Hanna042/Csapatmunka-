@@ -5,34 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Termék hozzáadása</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/hozzaadas.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <header>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-          <a class="navbar-brand" href="index.html" id="boltnev">VW áruház</a>
-          <div class="collapse navbar-collapse">
-          </div>
-        </div>
-      </nav>
-    </header>
-    <main class="container py-4">
-        <h1 class="h3 mb-4">Termék hozzáadása</h1>
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="index.html" id="boltnev">VW áruház</a>
+    </div>
+  </nav>
+</header>
 
-        <form id="addProductForm">
-            <input type="text" id="productName" class="form-control mb-2" placeholder="Név" required>
-            <input type="number" id="productPrice" class="form-control mb-2" placeholder="Ár" required>
-            <textarea id="productDescription" class="form-control mb-2" placeholder="Leírás"></textarea>
+<main class="container py-4">
+  <h1 class="h3 mb-4 hozzaad">Termék hozzáadása</h1>
 
-            <input type="file" id="productImage" class="form-control mb-2" accept="image/*">
+  <form id="addProductForm">
 
-            <button type="submit" class="btn btn-primary">Hozzáadás</button>
-        </form>
-    </main>
+    <div class="mb-3 hozzaad">
+      <label class="form-label">Termék neve</label>
+      <input type="text" class="form-control" id="productName" required>
+    </div>
 
-    <script type="module" src="js/hozzaadas.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/js/bootstrap.min.js"></script>
+    <div class="mb-3 hozzaad">
+      <label class="form-label">Termék ára</label>
+      <input type="number" class="form-control" id="productPrice" required>
+    </div>
+
+    <div class="mb-3 hozzaad">
+      <label class="form-label">Termék leírása</label>
+      <textarea class="form-control" id="productDescription" rows="3" required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Hozzáadás</button>
+  </form>
+</main>
+
+<script src="js/theme.js" defer></script>
+<script type="module" src="js/hozzaadas.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/js/bootstrap.min.js"></script>
 </body>
 </html>
