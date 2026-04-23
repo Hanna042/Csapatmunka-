@@ -3,7 +3,7 @@ import { getProducts } from "./get.js";
 import { getLocalProducts } from "./hozzaadas.js";
 import { formatHuf, getUsdToHufRate, usdToHuf } from "./exchange.js";
 
-function getQueryParam(name) {
+export function getQueryParam(name) {
   const params = new URLSearchParams(window.location.search);
   return params.get(name);
 }
@@ -151,4 +151,6 @@ async function init() {
   };
 }
 
-init();
+if (typeof document !== "undefined") {
+    init();
+}
