@@ -15,7 +15,7 @@ export async function addProduct(product, storage = localStorage) {
             throw new Error("Érvénytelen API válasz");
         }
 
-        // Mentés localStorage-ba is (optimistic update)
+        // Mentés localStorage-ba is
         const productToStore = {
             id: apiResponse.id || Date.now().toString(),
             title: product.title,

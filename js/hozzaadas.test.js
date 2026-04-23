@@ -1,23 +1,14 @@
-/**
- * @jest-environment jsdom
- *
- * Tesztek: hozzaadas.html → localStorage → index.html megjelenítés teljes folyamat
- */
 
 import { addProduct, getLocalProducts } from "./hozzaadas.js";
 import { renderProducts } from "./main.js";
 
-// ------------------------------------------------------------------
 // Segéd: localStorage reset minden teszt előtt
-// ------------------------------------------------------------------
 beforeEach(() => {
     localStorage.clear();
     document.body.innerHTML = "";
 });
 
-// ------------------------------------------------------------------
 // 1. addProduct – helyes tárolás
-// ------------------------------------------------------------------
 describe("addProduct()", () => {
     test("új terméket ment a localStorage-ba", () => {
         addProduct({ title: "Teszt cipő", price: "5000", description: "Kényelmes" });
@@ -45,9 +36,7 @@ describe("addProduct()", () => {
     });
 });
 
-// ------------------------------------------------------------------
 // 2. getLocalProducts – visszaolvasás
-// ------------------------------------------------------------------
 describe("getLocalProducts()", () => {
     test("üres tömböt ad vissza, ha még nincs semmi mentve", () => {
         expect(getLocalProducts()).toEqual([]);
@@ -60,9 +49,7 @@ describe("getLocalProducts()", () => {
     });
 });
 
-// ------------------------------------------------------------------
 // 3. renderProducts – DOM megjelenítés
-// ------------------------------------------------------------------
 describe("renderProducts()", () => {
     beforeEach(() => {
         document.body.innerHTML = `<div class="row g-3" id="Termekkartya"></div>`;
@@ -117,9 +104,7 @@ describe("renderProducts()", () => {
     });
 });
 
-// ------------------------------------------------------------------
 // 4. Teljes E2E folyamat: form beküldés → megjelenítés
-// ------------------------------------------------------------------
 describe("Teljes folyamat: hozzáadás → megjelenítés", () => {
     test("form adatai után a termék kártyán jelenik meg az indexen", () => {
         // 1. hozzaadas.html form beküldés szimulálása

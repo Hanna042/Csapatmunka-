@@ -1,7 +1,3 @@
-/**
- * Jest tesztek az exchange.js modulhoz
- * Teszteli az árfolyam konverziókat és formázásokat
- */
 
 import { usdToHuf, formatHuf, formatUsd } from "./exchange.js";
 
@@ -83,7 +79,7 @@ describe("exchange - Árfolyam konverzió", () => {
 
         test("Magyar lokalizáció", () => {
             const result = formatHuf(1000000);
-            // Magyarország: pont ezredeleséhez, nem vesszőt
+            // pont ezredeleséhez, nem vesszőt
             expect(result).toContain("Ft");
         });
     });
