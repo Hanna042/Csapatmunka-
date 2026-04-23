@@ -1,7 +1,3 @@
-/**
- * Jest tesztek a kosár végösszeg-számítási függvényre
- * A calcTotal() függvény szumálja a kosárban lévő termékek árát
- */
 
 import { calcTotal } from "./kosar.js";
 
