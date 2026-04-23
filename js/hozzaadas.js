@@ -1,12 +1,38 @@
-export function addProduct(product, storage = localStorage) {
-    const existing = JSON.parse(storage.getItem("products") || "[]");
+import { postData } from "./post.js";
 
-    if (!product.id) {
-        product.id = Date.now().toString();
+export async function addProduct(product, storage = localStorage) {
+    try {
+        // POST az API-hoz
+        const apiResponse = await postData("https://dummyjson.com/products/add", {
+            title: product.title,
+            price: Number(product.price),
+            description: product.description,
+            thumbnail: product.thumbnail
+        });
+
+        // API response validálása
+        if (!apiResponse || typeof apiResponse !== "object") {
+            throw new Error("Érvénytelen API válasz");
+        }
+
+        // Mentés localStorage-ba is (optimistic update)
+        const productToStore = {
+            id: apiResponse.id || Date.now().toString(),
+            title: product.title,
+            price: Number(product.price),
+            description: product.description,
+            thumbnail: product.thumbnail
+        };
+
+        const existing = JSON.parse(storage.getItem("products") || "[]");
+        existing.push(productToStore);
+        storage.setItem("products", JSON.stringify(existing));
+
+        return apiResponse;
+    } catch (error) {
+        console.error("Hiba a termék hozzáadásakor:", error);
+        throw error;
     }
-
-    existing.push(product);
-    storage.setItem("products", JSON.stringify(existing));
 }
 
 export function getLocalProducts(storage = localStorage) {
@@ -65,15 +91,20 @@ if (typeof document !== "undefined") {
                 }
             }
 
-            addProduct({
-                id: Date.now().toString(),
-                title,
-                price,
-                description,
-                thumbnail
-            });
+            try {
+                await addProduct({
+                    title,
+                    price,
+                    description,
+                    thumbnail
+                });
 
-            window.location.href = "index.html";
+                alert("Termék sikeresen hozzáadva!");
+                window.location.href = "index.html";
+            } catch (error) {
+                alert("Hiba: A termék hozzáadása sikertelen. Kérjük, próbálja újra!");
+                console.error("Hozzáadás hiba:", error);
+            }
         });
     });
 }
