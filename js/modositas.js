@@ -25,8 +25,6 @@ async function init() {
   const idRaw = getQueryParam('id');
   const id = idRaw && idRaw !== "null" && idRaw !== "undefined" && idRaw !== "" ? idRaw : null;
 
-  console.log("ID:", id);
-
   const usdHufRate = await getUsdToHufRate();
 
   const editCard = document.getElementById('edit-card');
@@ -39,11 +37,23 @@ async function init() {
       const apiProducts = await getProducts();
       const localProducts = getLocalProducts();
 
-      const allProducts = [...apiProducts, ...localProducts];
+      const localMap = Object.fromEntries(
+        localProducts.map(p => [String(p.id), p])
+      );
+
+      const mergedProducts = apiProducts.map(p =>
+        localMap[String(p.id)] ? localMap[String(p.id)] : p
+      );
+
+      const extraLocal = localProducts.filter(
+        lp => !apiProducts.some(ap => String(ap.id) === String(lp.id))
+      );
+
+      const finalProducts = [...mergedProducts, ...extraLocal];
 
       if (!productListContainer) return;
 
-      productListContainer.innerHTML = allProducts.map((p) => `
+      productListContainer.innerHTML = finalProducts.map((p) => `
         <div class="col-12 col-sm-6 col-lg-4">
           <div class="card shadow-sm">
             <img src="${p.thumbnail || 'https://via.placeholder.com/300'}" class="card-img-top">
@@ -80,7 +90,7 @@ async function init() {
   let product;
   let isLocal = false;
 
-  const localProducts = getLocalProducts();
+  let localProducts = getLocalProducts();
   product = localProducts.find(p => String(p.id) === String(id));
 
   if (product) {
@@ -140,6 +150,18 @@ async function init() {
 
       } else {
         await updateProductOnAPI(id, { price: newPrice });
+
+        const filtered = localProducts.filter(p => String(p.id) !== String(id));
+
+        const updatedProduct = {
+          ...product,
+          price: newPrice
+        };
+
+        localStorage.setItem(
+          'products',
+          JSON.stringify([...filtered, updatedProduct])
+        );
       }
 
       location.href = 'index.html';
@@ -151,4 +173,10 @@ async function init() {
   };
 }
 
+<<<<<<< Updated upstream
 init();
+=======
+if (typeof document !== "undefined") {
+  init();
+}
+>>>>>>> Stashed changes

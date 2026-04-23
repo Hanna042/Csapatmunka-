@@ -138,20 +138,21 @@ async function init() {
         ]);
 
       
-        const raw = localStorage.getItem('priceOverrides');
-        let overrides = {};
-        try {
-            overrides = raw ? JSON.parse(raw) : {};
-        } catch {}
+        const localMap = Object.fromEntries(
+            localProducts.map(p => [String(p.id), p])
+        );
 
-        const productsWithOverrides = products.map(p => {
-            if (overrides && overrides[String(p.id)] !== undefined) {
-                return { ...p, price: Number(overrides[String(p.id)]) };
-            }
-            return p;
-        });
+        const mergedProducts = products.map(p =>
+            localMap[String(p.id)] ? localMap[String(p.id)] : p
+        );
 
-        renderProducts([...productsWithOverrides, ...localProducts], usdHufRate);
+        const extraLocal = localProducts.filter(
+            lp => !products.some(ap => String(ap.id) === String(lp.id))
+        );
+
+        const finalProducts = [...mergedProducts, ...extraLocal];
+
+        renderProducts(finalProducts, usdHufRate);
     } catch {
         if (localProducts.length > 0) {
             renderProducts(localProducts, null);
