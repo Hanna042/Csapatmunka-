@@ -173,10 +173,6 @@ async function init() {
   };
 }
 
-<<<<<<< Updated upstream
-init();
-=======
 if (typeof document !== "undefined") {
   init();
 }
->>>>>>> Stashed changes
