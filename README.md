@@ -29,30 +29,47 @@ Fontos: az API válasza objektum, a termékek a `products` tömbben találhatók
 
 ```
 CSAPATMUNKA-
-│   hozzaadas.html
-│   index.html
-│   kosar.html
-│   modositas.html
-│   README.md
-│   
-├───assets
-├───css
-│       style.css
-│       
-├───dokumentumok
-│       AI Napló.docx
-│       Daly_stand-up.docx
-│       
-└───js
+|   .gitignore
+|   hozzaadas.html
+|   index.html
+|   kosar.html
+|   modositas.html
+|   package-lock.json
+|   package.json
+|   README.md
+|
++---css
+|       hozzaadas.css
+|       kosar.css
+|       modositas.css
+|       style.css
+|
++---dokumentumok
+|       AI Napló.docx
+|       AI Napló.md
+|       Daly_stand-up.docx
+|       Daly_stand-up.md
+|       Projekt naplo.docx
+|       Projekt naplo.md
+|       sotet.hatter.jpg
+|       TELJES_TESZT_NAPLO.md
+|       TESZTNAPLOF.md
+|       vilagos.hatter.jpg
+|
+\---js
+        exchange.js
+        exchange.test.js
         get.js
+        hozzaadas.js
+        hozzaadas.test.js
         kosar.js
         kosar.test.js
         main.js
         modositas.js
         post.js
         put.js
+        theme.js
         
-
 ```
         
 
